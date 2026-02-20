@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import Icon from '@/app/components/Icon';
 import { listAllDebts } from '@/lib/queries/debts';
 import { formatAmount } from '@/lib/currency';
@@ -31,7 +32,7 @@ export default function DebtsList() {
               href="/dashboard"
               className="flex items-center gap-2 text-[#6B7280] hover:text-[#1F2937] transition-colors"
             >
-              <Icon name="back" size={20} />
+              <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Dashboard</span>
             </Link>
             <div className="flex items-center gap-2">

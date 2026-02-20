@@ -17,6 +17,8 @@ import { listTransactions, getMonthlyTrends } from '@/lib/queries/transactions';
 import { getCategorySpending } from '@/lib/queries/budgets';
 import { formatAmount } from '@/lib/currency';
 import DebtOverview from '@/app/components/DebtOverview';
+import UserMenu from '@/app/components/UserMenu';
+import { Bell, Settings } from 'lucide-react';
 import Icon, { CATEGORY_ICON_MAP, type IconName } from '@/app/components/Icon';
 import type { Transaction } from '@/lib/types';
 
@@ -100,21 +102,19 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/dashboard" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#6366F1] rounded-xl flex items-center justify-center">
-                <Icon name="dashboard" size={24} invert alt="Budget Tracker" ariaHidden={false} />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+                <Icon name="dashboard" size={24} alt="Budget Tracker" ariaHidden={false} />
               </div>
               <h1 className="text-xl font-semibold text-[#1F2937]">Budget Tracker</h1>
             </Link>
             <div className="flex items-center gap-4">
               <button className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors" aria-label="Notifications">
-                <Icon name="neutral" size={20} />
+                <Bell className="w-5 h-5 text-[#6B7280]" />
               </button>
               <button className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors" aria-label="Settings">
-                <Icon name="settings" size={20} />
+                <Settings className="w-5 h-5 text-[#6B7280]" />
               </button>
-              <div className="w-9 h-9 bg-[#6366F1] rounded-full flex items-center justify-center text-white font-medium text-sm">
-                {userName.slice(0, 2).toUpperCase()}
-              </div>
+              <UserMenu initials={userName.slice(0, 2).toUpperCase()} />
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function Dashboard() {
         <div className="bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] rounded-3xl p-6 mb-8 text-white shadow-lg">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-              <Icon name="chart" size={24} invert alt="AI Insight" ariaHidden={false} />
+              <Icon name="chart" size={24} alt="AI Insight" ariaHidden={false} />
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold mb-2">AI Insight</h3>

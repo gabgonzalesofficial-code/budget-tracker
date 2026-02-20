@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { ArrowLeft, Send } from 'lucide-react';
 import Icon from '@/app/components/Icon';
 
 export default function AIAssistant() {
@@ -127,7 +128,7 @@ export default function AIAssistant() {
               href="/dashboard"
               className="flex items-center gap-2 text-[#6B7280] hover:text-[#1F2937] transition-colors"
             >
-              <Icon name="back" size={20} />
+              <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Dashboard</span>
             </Link>
             <div className="flex items-center gap-3">
@@ -252,7 +253,7 @@ export default function AIAssistant() {
                     disabled={!inputMessage.trim()}
                     className="px-6 py-3 bg-[#6366F1] text-white rounded-xl font-medium hover:bg-[#4F46E5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
-                    <Icon name="neutral" size={20} />
+                    <Send className="w-5 h-5" />
                     Send
                   </button>
                 </form>

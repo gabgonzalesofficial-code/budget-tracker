@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ArrowLeft, FileText, Repeat } from 'lucide-react';
 import Icon from '@/app/components/Icon';
 import { getCategories } from '@/lib/queries/categories';
 import { insertTransaction } from '@/lib/queries/transactions';
@@ -71,7 +72,7 @@ export default function AddTransaction() {
               href="/dashboard"
               className="flex items-center gap-2 text-[#6B7280] hover:text-[#1F2937] transition-colors"
             >
-              <Icon name="back" size={20} />
+              <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Dashboard</span>
             </Link>
           </div>
@@ -283,7 +284,7 @@ export default function AddTransaction() {
                   className="w-4 h-4 text-[#10B981] rounded focus:ring-[#10B981]"
                 />
                 <label htmlFor="recurring" className="flex items-center gap-2 text-sm text-[#166534] cursor-pointer">
-                  <Icon name="neutral" size={16} />
+                  <Repeat className="w-4 h-4" />
                   Mark as recurring (bi-monthly on 15th & 30th)
                 </label>
               </div>
@@ -294,7 +295,7 @@ export default function AddTransaction() {
                 Notes (Optional)
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-4"><Icon name="neutral" size={20} /></span>
+                <span className="absolute left-4 top-4"><FileText className="w-5 h-5 text-[#9CA3AF]" /></span>
                 <textarea
                   id="notes"
                   value={notes}

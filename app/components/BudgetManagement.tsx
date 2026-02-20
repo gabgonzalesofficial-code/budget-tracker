@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ArrowLeft, AlertCircle, Settings } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Icon, { CATEGORY_ICON_MAP, type IconName } from '@/app/components/Icon';
 import { formatAmount } from '@/lib/currency';
@@ -137,7 +138,7 @@ export default function BudgetManagement() {
               href="/dashboard"
               className="flex items-center gap-2 text-[#6B7280] hover:text-[#1F2937] transition-colors"
             >
-              <Icon name="back" size={20} />
+              <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Dashboard</span>
             </Link>
           </div>
@@ -282,7 +283,7 @@ export default function BudgetManagement() {
                   </div>
                   <div className="flex gap-2">
                     <button className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors">
-                      <Icon name="settings" size={16} />
+                      <Settings className="w-4 h-4 text-[#6B7280]" />
                     </button>
                     <button
                       type="button"
@@ -329,7 +330,7 @@ export default function BudgetManagement() {
 
                 {isNearLimit && !isOverBudget && (
                   <div className="flex items-start gap-2 p-3 bg-[#FEF3C7] rounded-xl">
-                    <Icon name="neutral" size={16} className="mt-0.5 flex-shrink-0" />
+                    <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#D97706]" />
                     <p className="text-xs text-[#92400E]">
                       You&apos;re approaching your budget limit. Consider reducing spending in this category.
                     </p>

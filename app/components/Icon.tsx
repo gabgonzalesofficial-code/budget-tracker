@@ -17,11 +17,11 @@ export const ICON_NAMES = [
   'dashboard',
   'savings',
   'add',
-  'back',
-  'settings',
   'calendar',
   'wallet',
   'neutral',
+  'email',
+  'password',
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];
@@ -32,15 +32,15 @@ const ICON_FILE_MAP: Record<IconName, string> = {
   salary: '/icons/268777_money-bag-icon.png',
   debt: '/icons/268781_credit-card-icon.png',
   budget: '/icons/268766_money-gear-icon.png',
-  chart: '/icons/268769_calculator-icon.png',
+  chart: '/icons/268771_target-with-money-icon.png',
   dashboard: '/icons/268768_stack-of-money-icon.png',
   savings: '/icons/268770_saving-money-icon.png',
-  add: '/icons/268775_coin-jar-icon.png',
-  back: '/icons/268787_import-container-icon.png',
-  settings: '/icons/268766_money-gear-icon.png',
+  add: '/icons/268769_calculator-icon.png',
   calendar: '/icons/268779_payment-date-icon.png',
   wallet: '/icons/268780_coin-icon.png',
   neutral: '/icons/268780_coin-icon.png',
+  email: '/icons/Email.png',
+  password: '/icons/password.png',
 };
 
 /** Maps legacy DB icon_name to semantic IconName. Fallback: neutral. */

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { ArrowLeft, Percent } from 'lucide-react';
 import Icon from '@/app/components/Icon';
 import { createDebt } from '@/lib/queries/debts';
 import { formatAmount } from '@/lib/currency';
@@ -57,7 +58,7 @@ export default function AddDebtForm() {
               href="/debts"
               className="flex items-center gap-2 text-[#6B7280] hover:text-[#1F2937] transition-colors"
             >
-              <Icon name="back" size={20} />
+              <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Debts</span>
             </Link>
           </div>
@@ -153,7 +154,7 @@ export default function AddDebtForm() {
                 Interest Rate % (Optional)
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2"><Icon name="neutral" size={20} /></span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2"><Percent className="w-5 h-5 text-[#9CA3AF]" /></span>
                 <input
                   id="interest"
                   type="number"
