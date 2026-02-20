@@ -115,7 +115,7 @@ export default function AIAssistant() {
       }
     }
     load();
-  }, []);
+  }, [formatAmount, symbol]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

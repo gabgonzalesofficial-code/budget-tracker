@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Icon, { type IconName } from '@/app/components/Icon';
+import Icon from '@/app/components/Icon';
 import { listDebts } from '@/lib/queries/debts';
 import { useCurrency } from '@/context/CurrencyContext';
 import type { Debt } from '@/lib/types';

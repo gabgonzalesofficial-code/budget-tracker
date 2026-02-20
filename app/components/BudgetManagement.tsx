@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, AlertCircle, Settings } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 import Icon, { CATEGORY_ICON_MAP, type IconName } from '@/app/components/Icon';
 import { useCurrency } from '@/context/CurrencyContext';
 import { listBudgets, getCategorySpending, upsertBudget, deleteBudget } from '@/lib/queries/budgets';

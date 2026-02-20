@@ -13,7 +13,6 @@ export default function SettingsContent() {
   const { currencyCode, setCurrency } = useCurrency();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -75,7 +74,6 @@ export default function SettingsContent() {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
       setMessage({ type: 'success', text: 'Password updated successfully.' });
-      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
