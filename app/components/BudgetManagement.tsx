@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, AlertCircle, Settings } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import Icon, { CATEGORY_ICON_MAP, type IconName } from '@/app/components/Icon';
-import { formatAmount } from '@/lib/currency';
+import { useCurrency } from '@/context/CurrencyContext';
 import { listBudgets, getCategorySpending, upsertBudget, deleteBudget } from '@/lib/queries/budgets';
 import { getCategories } from '@/lib/queries/categories';
 import type { Budget } from '@/lib/types';
@@ -18,6 +18,7 @@ interface BudgetWithSpending extends Budget {
 }
 
 export default function BudgetManagement() {
+  const { formatAmount } = useCurrency();
   const [budgets, setBudgets] = useState<BudgetWithSpending[]>([]);
   const [totals, setTotals] = useState({ budget: 0, spent: 0 });
   const [isAddingBudget, setIsAddingBudget] = useState(false);
@@ -53,7 +54,7 @@ export default function BudgetManagement() {
             ...b,
             spent,
             categoryName: cat?.name ?? 'Unknown',
-            color: cat?.color ?? '#6366F1',
+            color: cat?.color ?? '#059669',
             iconName,
           };
         });
@@ -97,7 +98,7 @@ export default function BudgetManagement() {
           spent,
           categoryName: cat?.name ?? 'Unknown',
           iconName,
-          color: cat?.color ?? '#6366F1',
+          color: cat?.color ?? '#059669',
         };
       });
       setBudgets(merged);
@@ -159,7 +160,7 @@ export default function BudgetManagement() {
             </div>
             <div className="text-right">
               <p className="text-sm text-[#6B7280] mb-1">Spent This Month</p>
-              <p className="text-2xl font-semibold text-[#6366F1]">{formatAmount(totalSpent)}</p>
+              <p className="text-2xl font-semibold text-[#059669]">{formatAmount(totalSpent)}</p>
             </div>
           </div>
 
@@ -171,7 +172,7 @@ export default function BudgetManagement() {
             <div className="w-full bg-[#F3F4F6] rounded-full h-3 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
-                  percentageUsed > 100 ? 'bg-[#EF4444]' : percentageUsed > 80 ? 'bg-[#F59E0B]' : 'bg-[#6366F1]'
+                  percentageUsed > 100 ? 'bg-[#EF4444]' : percentageUsed > 80 ? 'bg-[#F59E0B]' : 'bg-[#059669]'
                 }`}
                 style={{ width: `${Math.min(percentageUsed, 100)}%` }}
               />
@@ -186,7 +187,7 @@ export default function BudgetManagement() {
           <button
             type="button"
             onClick={() => setIsAddingBudget(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-[#6366F1] text-white rounded-2xl font-medium hover:bg-[#4F46E5] transition-colors shadow-sm"
+            className="flex items-center gap-2 px-6 py-3 bg-[#059669] text-white rounded-2xl font-medium hover:bg-[#047857] transition-colors shadow-sm"
           >
             <Icon name="add" size={20} />
             Add New Budget
@@ -205,7 +206,7 @@ export default function BudgetManagement() {
                   id="category"
                   value={newCategoryId}
                   onChange={(e) => setNewCategoryId(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all"
                   required
                 >
                   <option value="">Select category</option>
@@ -232,7 +233,7 @@ export default function BudgetManagement() {
                   min="0"
                   value={newAmount}
                   onChange={(e) => setNewAmount(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all"
                   placeholder="0.00"
                   required
                 />
@@ -247,7 +248,7 @@ export default function BudgetManagement() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-[#6366F1] text-white rounded-xl font-medium hover:bg-[#4F46E5] transition-colors"
+                  className="flex-1 py-3 bg-[#059669] text-white rounded-xl font-medium hover:bg-[#047857] transition-colors"
                 >
                   Add Budget
                 </button>
@@ -308,7 +309,7 @@ export default function BudgetManagement() {
                   <div className="w-full bg-[#F3F4F6] rounded-full h-2.5 overflow-hidden mb-2">
                     <div
                       className={`h-full rounded-full transition-all ${
-                        isOverBudget ? 'bg-[#EF4444]' : isNearLimit ? 'bg-[#F59E0B]' : 'bg-[#6366F1]'
+                        isOverBudget ? 'bg-[#EF4444]' : isNearLimit ? 'bg-[#F59E0B]' : 'bg-[#059669]'
                       }`}
                       style={{ width: `${Math.min(percentage, 100)}%` }}
                     />
@@ -350,10 +351,10 @@ export default function BudgetManagement() {
           })}
         </div>
 
-        <div className="mt-8 bg-gradient-to-br from-[#EEF2FF] to-[#E0E7FF] rounded-3xl p-6 border border-[#C7D2FE]">
+        <div className="mt-8 bg-gradient-to-br from-[#D1FAE5] to-[#A7F3D0] rounded-3xl p-6 border border-[#6EE7B7]">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-[#6366F1] rounded-xl flex items-center justify-center flex-shrink-0">
-              <Icon name="income" size={20} invert />
+            <div className="w-10 h-10 bg-[#059669] rounded-xl flex items-center justify-center flex-shrink-0">
+              <Icon name="income" size={20} />
             </div>
             <div>
               <h3 className="font-semibold text-[#1F2937] mb-2">AI Budget Recommendation</h3>
@@ -363,7 +364,7 @@ export default function BudgetManagement() {
               </p>
               <Link
                 href="/ai-assistant"
-                className="text-sm font-medium text-[#6366F1] hover:text-[#4F46E5] transition-colors"
+                className="text-sm font-medium text-[#059669] hover:text-[#047857] transition-colors"
               >
                 Learn More →
               </Link>

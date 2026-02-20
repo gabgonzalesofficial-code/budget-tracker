@@ -1,5 +1,9 @@
 -- Debt types for AI readiness (warnings, optimal payment focus)
-create type debt_type_enum as enum ('loan', 'credit_card', 'personal');
+do $$ begin
+  create type debt_type_enum as enum ('loan', 'credit_card', 'personal');
+exception
+  when duplicate_object then null;
+end $$;
 
 create table if not exists public.debts (
   id uuid primary key default gen_random_uuid(),
@@ -15,12 +19,13 @@ create table if not exists public.debts (
 
 alter table public.debts enable row level security;
 
+drop policy if exists "Users can manage own debts" on public.debts;
 create policy "Users can manage own debts"
   on public.debts for all
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
-create index debts_user_idx on public.debts(user_id);
+create index if not exists debts_user_idx on public.debts(user_id);
 
 -- Debt Payment category for transaction linkage
 insert into public.categories (name, type, color, icon_name) values

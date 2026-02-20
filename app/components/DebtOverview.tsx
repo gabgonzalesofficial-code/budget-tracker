@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Icon, { type IconName } from '@/app/components/Icon';
 import { listDebts } from '@/lib/queries/debts';
-import { formatAmount } from '@/lib/currency';
+import { useCurrency } from '@/context/CurrencyContext';
 import type { Debt } from '@/lib/types';
 
 export default function DebtOverview() {
+  const { formatAmount } = useCurrency();
   const [debts, setDebts] = useState<Debt[]>([]);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function DebtOverview() {
           <h3 className="text-lg font-semibold text-[#1F2937]">Debt Overview</h3>
           <Link
             href="/debts/new"
-            className="text-sm text-[#6366F1] font-medium hover:text-[#4F46E5] transition-colors"
+            className="text-sm text-[#059669] font-medium hover:text-[#047857] transition-colors"
           >
             Add Debt
           </Link>
@@ -47,7 +48,7 @@ export default function DebtOverview() {
           </Link>
             <Link
               href="/debts/new"
-              className="text-sm text-[#6366F1] font-medium hover:text-[#4F46E5] transition-colors flex items-center gap-1"
+              className="text-sm text-[#059669] font-medium hover:text-[#047857] transition-colors flex items-center gap-1"
             >
               <Icon name="add" size={16} />
             Add Debt
@@ -76,7 +77,7 @@ export default function DebtOverview() {
               </div>
               <div className="w-full bg-[#F3F4F6] rounded-full h-1.5 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-[#6366F1] transition-all"
+                  className="h-full rounded-full bg-[#059669] transition-all"
                   style={{ width: `${Math.min(pct, 100)}%` }}
                 />
               </div>
@@ -87,7 +88,7 @@ export default function DebtOverview() {
       {debts.length > 3 && (
         <Link
           href="/debts"
-          className="block mt-3 text-sm text-[#6366F1] font-medium hover:text-[#4F46E5] text-center"
+          className="block mt-3 text-sm text-[#059669] font-medium hover:text-[#047857] text-center"
         >
           View all {debts.length} debts →
         </Link>

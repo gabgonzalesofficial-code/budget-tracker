@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Percent } from 'lucide-react';
 import Icon from '@/app/components/Icon';
-import { createDebt } from '@/lib/queries/debts';
+import { getDebtById, updateDebt } from '@/lib/queries/debts';
 import type { DebtType } from '@/lib/types';
 
-export default function AddDebtForm() {
+export default function EditDebtForm({ id }: { id: string }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [type, setType] = useState<DebtType>('personal');
   const [totalAmount, setTotalAmount] = useState('');
@@ -18,12 +19,32 @@ export default function AddDebtForm() {
   const [dueDate, setDueDate] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    getDebtById(id)
+      .then((debt) => {
+        if (!debt) {
+          setNotFound(true);
+          return;
+        }
+        setName(debt.name);
+        setType(debt.type as DebtType);
+        setTotalAmount(String(debt.total_amount));
+        setRemainingBalance(String(debt.remaining_balance));
+        setInterestRate(debt.interest_rate != null ? String(debt.interest_rate) : '');
+        setDueDate(debt.due_date ?? '');
+      })
+      .catch(() => setNotFound(true))
+      .finally(() => setLoading(false));
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
     setError(null);
     setIsSubmitting(true);
+
     const total = parseFloat(totalAmount);
     const remaining = parseFloat(remainingBalance);
     if (isNaN(total) || total < 0 || isNaN(remaining) || remaining < 0) {
@@ -38,7 +59,7 @@ export default function AddDebtForm() {
     }
 
     try {
-      await createDebt({
+      await updateDebt(id, {
         name,
         type,
         total_amount: total,
@@ -49,10 +70,29 @@ export default function AddDebtForm() {
       router.push('/debts');
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add debt');
+      setError(err instanceof Error ? err.message : 'Failed to update debt');
       setIsSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FB] flex items-center justify-center">
+        <div className="text-[#6B7280]">Loading...</div>
+      </div>
+    );
+  }
+
+  if (notFound) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FB] flex flex-col items-center justify-center gap-4">
+        <p className="text-[#6B7280]">Debt not found</p>
+        <Link href="/debts" className="text-[#059669] hover:underline font-medium">
+          Back to Debts
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F9FB]">
@@ -72,8 +112,8 @@ export default function AddDebtForm() {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-[#1F2937] mb-2">Add Debt</h1>
-          <p className="text-[#6B7280]">Track loans, credit cards, and personal debt</p>
+          <h1 className="text-2xl font-semibold text-[#1F2937] mb-2">Edit Debt</h1>
+          <p className="text-[#6B7280]">Update your debt details</p>
         </div>
 
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-[#E5E7EB]">
@@ -151,7 +191,7 @@ export default function AddDebtForm() {
                   required
                 />
               </div>
-              <p className="mt-1 text-xs text-[#6B7280]">Leave equal to total if starting fresh</p>
+              <p className="mt-1 text-xs text-[#6B7280]">Cannot exceed total amount</p>
             </div>
 
             <div>
@@ -201,7 +241,7 @@ export default function AddDebtForm() {
                 disabled={isSubmitting}
                 className="flex-1 py-4 bg-[#059669] text-white rounded-2xl font-medium hover:bg-[#047857] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'Adding...' : 'Add Debt'}
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>

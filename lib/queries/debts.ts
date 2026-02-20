@@ -75,6 +75,86 @@ export async function createDebt(debt: {
   return { ...data, total_amount: Number(data.total_amount), remaining_balance: Number(data.remaining_balance) } as Debt;
 }
 
+export async function getDebtById(id: string): Promise<Debt | null> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from('debts')
+    .select('*')
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .single();
+
+  if (error || !data) return null;
+  return {
+    ...data,
+    total_amount: Number(data.total_amount),
+    remaining_balance: Number(data.remaining_balance),
+    interest_rate: data.interest_rate != null ? Number(data.interest_rate) : null,
+  } as Debt;
+}
+
+export async function updateDebt(id: string, debt: {
+  name?: string;
+  type?: DebtType;
+  total_amount?: number;
+  remaining_balance?: number;
+  interest_rate?: number | null;
+  due_date?: string | null;
+}): Promise<Debt> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  const updates: Record<string, unknown> = {};
+  if (debt.name !== undefined) updates.name = debt.name;
+  if (debt.type !== undefined) updates.type = debt.type;
+  if (debt.total_amount !== undefined) updates.total_amount = debt.total_amount;
+  if (debt.remaining_balance !== undefined) updates.remaining_balance = Math.max(0, debt.remaining_balance);
+  if (debt.interest_rate !== undefined) updates.interest_rate = debt.interest_rate;
+  if (debt.due_date !== undefined) updates.due_date = debt.due_date;
+
+  if (Object.keys(updates).length === 0) {
+    const d = await getDebtById(id);
+    if (!d) throw new Error('Debt not found');
+    return d;
+  }
+
+  if (updates.remaining_balance !== undefined && updates.total_amount !== undefined) {
+    const remaining = Number(updates.remaining_balance);
+    const total = Number(updates.total_amount);
+    if (remaining > total) throw new Error('Remaining balance cannot exceed total amount');
+  }
+
+  const { data, error } = await supabase
+    .from('debts')
+    .update(updates)
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  if (!data) throw new Error('Debt not found');
+  return { ...data, total_amount: Number(data.total_amount), remaining_balance: Number(data.remaining_balance) } as Debt;
+}
+
+export async function deleteDebt(id: string): Promise<void> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  const { error } = await supabase
+    .from('debts')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id);
+
+  if (error) throw error;
+}
+
 export async function payDebt(
   debtId: string,
   amount: number,

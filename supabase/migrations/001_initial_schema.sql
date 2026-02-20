@@ -12,6 +12,7 @@ create table if not exists public.categories (
 -- Enable RLS
 alter table public.categories enable row level security;
 
+drop policy if exists "Categories are readable by everyone" on public.categories;
 create policy "Categories are readable by everyone"
   on public.categories for select
   using (true);
@@ -31,12 +32,13 @@ create table if not exists public.transactions (
 
 alter table public.transactions enable row level security;
 
+drop policy if exists "Users can manage own transactions" on public.transactions;
 create policy "Users can manage own transactions"
   on public.transactions for all
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
-create index transactions_user_date_idx on public.transactions(user_id, date desc);
+create index if not exists transactions_user_date_idx on public.transactions(user_id, date desc);
 
 -- Budgets
 create table if not exists public.budgets (
@@ -52,6 +54,7 @@ create table if not exists public.budgets (
 
 alter table public.budgets enable row level security;
 
+drop policy if exists "Users can manage own budgets" on public.budgets;
 create policy "Users can manage own budgets"
   on public.budgets for all
   using (auth.uid() = user_id)
@@ -61,22 +64,22 @@ create policy "Users can manage own budgets"
 insert into public.categories (name, type, color, icon_name) values
   ('Food & Dining', 'expense', '#EF4444', 'Utensils'),
   ('Transport', 'expense', '#F59E0B', 'Car'),
-  ('Shopping', 'expense', '#8B5CF6', 'ShoppingBag'),
+  ('Shopping', 'expense', '#059669', 'ShoppingBag'),
   ('Housing', 'expense', '#3B82F6', 'Home'),
   ('Entertainment', 'expense', '#EC4899', 'Coffee'),
   ('Utilities', 'expense', '#10B981', 'Lightbulb'),
   ('Healthcare', 'expense', '#EF4444', 'Heart'),
-  ('Education', 'expense', '#6366F1', 'GraduationCap'),
+  ('Education', 'expense', '#059669', 'GraduationCap'),
   ('Other', 'expense', '#6B7280', 'Tag'),
   ('Salary', 'income', '#10B981', 'TrendingUp'),
   ('Bonus', 'income', '#10B981', 'TrendingUp'),
   ('Investment', 'income', '#10B981', 'TrendingUp'),
   ('Gift', 'income', '#10B981', 'TrendingUp'),
   ('Other', 'income', '#10B981', 'TrendingUp'),
-  ('Freelance', 'other_revenue', '#6366F1', 'DollarSign'),
-  ('Side Business', 'other_revenue', '#6366F1', 'DollarSign'),
-  ('Rental Income', 'other_revenue', '#6366F1', 'DollarSign'),
-  ('Dividend', 'other_revenue', '#6366F1', 'DollarSign'),
-  ('Refund', 'other_revenue', '#6366F1', 'DollarSign'),
-  ('Other', 'other_revenue', '#6366F1', 'DollarSign')
+  ('Freelance', 'other_revenue', '#059669', 'DollarSign'),
+  ('Side Business', 'other_revenue', '#059669', 'DollarSign'),
+  ('Rental Income', 'other_revenue', '#059669', 'DollarSign'),
+  ('Dividend', 'other_revenue', '#059669', 'DollarSign'),
+  ('Refund', 'other_revenue', '#059669', 'DollarSign'),
+  ('Other', 'other_revenue', '#059669', 'DollarSign')
 on conflict (name, type) do nothing;

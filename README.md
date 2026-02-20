@@ -15,12 +15,18 @@ npm install
 - Create a [Supabase](https://supabase.com) project
 - Copy `.env.example` to `.env.local`
 - Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from your project settings
+
+3. **Configure Groq AI (for AI Assistant)**
+
+- Create a [Groq](https://console.groq.com) account and get an API key
+- Add `GROQ_API_KEY=your-key-here` to your `.env` file
+- The AI Assistant will work without it but will show an error when chatting
 - Run migrations in order in the Supabase SQL editor:
   - `supabase/migrations/001_initial_schema.sql`
   - `supabase/migrations/002_salary_support.sql`
   - `supabase/migrations/003_debts.sql`
 
-3. **Run the app**
+4. **Run the app**
 
 ```bash
 npm run dev
@@ -42,6 +48,7 @@ Open [http://localhost:3000](http://localhost:3000). You’ll be redirected to `
 | `/debts` | Debt list and overview |
 | `/debts/new` | Add a debt |
 | `/debts/pay` | Record a debt payment |
+| `/settings` | Currency, profile name, change password |
 
 ## Data Model
 
@@ -60,5 +67,6 @@ Data is stored with clear structure for later AI analysis (trends, overages, inc
 - TypeScript
 - Tailwind CSS
 - Supabase (Auth + PostgreSQL)
+- Groq AI (Llama 3.3 70B for AI Assistant)
 - Recharts
 - Lucide React

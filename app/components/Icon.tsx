@@ -20,8 +20,11 @@ export const ICON_NAMES = [
   'calendar',
   'wallet',
   'neutral',
-  'email',
+  'email',  
   'password',
+  'mainlogo',
+  'logowithtext',
+  'robotassistant',
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];
@@ -41,6 +44,9 @@ const ICON_FILE_MAP: Record<IconName, string> = {
   neutral: '/icons/268780_coin-icon.png',
   email: '/icons/Email.png',
   password: '/icons/password.png',
+  mainlogo: '/icons/main-logo.png',       
+  logowithtext: '/icons/main-logo-with-text.gif',
+  robotassistant: '/icons/robotassistant.png',
 };
 
 /** Maps legacy DB icon_name to semantic IconName. Fallback: neutral. */

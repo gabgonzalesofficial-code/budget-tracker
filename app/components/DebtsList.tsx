@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import Icon from '@/app/components/Icon';
-import { listAllDebts } from '@/lib/queries/debts';
-import { formatAmount } from '@/lib/currency';
+import { listAllDebts, deleteDebt } from '@/lib/queries/debts';
+import { useCurrency } from '@/context/CurrencyContext';
+import ConfirmModal from './ConfirmModal';
 import type { Debt } from '@/lib/types';
 
 const TYPE_LABELS: Record<string, string> = {
@@ -15,7 +17,35 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 export default function DebtsList() {
+  const router = useRouter();
+  const { formatAmount } = useCurrency();
   const [debts, setDebts] = useState<Debt[]>([]);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const handleDeleteClick = (id: string) => {
+    if (deletingId) return;
+    setConfirmDeleteId(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmDeleteId) return;
+    setDeletingId(confirmDeleteId);
+    try {
+      await deleteDebt(confirmDeleteId);
+      setDebts((prev) => prev.filter((d) => d.id !== confirmDeleteId));
+      router.refresh();
+      setConfirmDeleteId(null);
+    } catch {
+      // ignore
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDeleteId(null);
+  };
 
   useEffect(() => {
     listAllDebts().then(setDebts).catch(() => setDebts([]));
@@ -45,7 +75,7 @@ export default function DebtsList() {
               </Link>
               <Link
                 href="/debts/new"
-                className="flex items-center gap-2 px-4 py-2 bg-[#6366F1] text-white rounded-xl font-medium hover:bg-[#4F46E5] transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-[#059669] text-white rounded-xl font-medium hover:bg-[#047857] transition-colors"
               >
                 <Icon name="add" size={16} />
                 Add Debt
@@ -73,7 +103,7 @@ export default function DebtsList() {
             <p className="text-[#6B7280] mb-6">Add a debt to start tracking payments and progress.</p>
             <Link
               href="/debts/new"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#6366F1] text-white rounded-xl font-medium hover:bg-[#4F46E5] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#059669] text-white rounded-xl font-medium hover:bg-[#047857] transition-colors"
             >
               <Icon name="add" size={20} />
               Add Debt
@@ -102,15 +132,35 @@ export default function DebtsList() {
                         <p className="text-sm text-[#6B7280]">{TYPE_LABELS[debt.type] ?? debt.type}</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-xl font-bold text-[#1F2937]">{formatAmount(debt.remaining_balance)}</p>
-                      <p className="text-xs text-[#6B7280]">of {formatAmount(debt.total_amount)}</p>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <p className="text-xl font-bold text-[#1F2937]">{formatAmount(debt.remaining_balance)}</p>
+                        <p className="text-xs text-[#6B7280]">of {formatAmount(debt.total_amount)}</p>
+                      </div>
+                      <div className="flex gap-1">
+                        <Link
+                          href={`/debts/${debt.id}/edit`}
+                          className="p-2 text-[#6B7280] hover:text-[#059669] hover:bg-[#D1FAE5] rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteClick(debt.id)}
+                          disabled={deletingId === debt.id}
+                          className="p-2 text-[#6B7280] hover:text-[#EF4444] hover:bg-[#FEF2F2] rounded-lg transition-colors disabled:opacity-50"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div className="mb-4">
                     <div className="w-full bg-[#F3F4F6] rounded-full h-2.5 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-[#6366F1] transition-all"
+                        className="h-full rounded-full bg-[#059669] transition-all"
                         style={{ width: `${Math.min(pct, 100)}%` }}
                       />
                     </div>
@@ -131,6 +181,19 @@ export default function DebtsList() {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={confirmDeleteId !== null}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete debt"
+        message="Are you sure you want to delete this debt? This cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        loadingLabel="Deleting..."
+        isLoading={deletingId !== null}
+      />
     </div>
   );
 }

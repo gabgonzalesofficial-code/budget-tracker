@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { ArrowLeft, FileText, Repeat } from 'lucide-react';
 import Icon from '@/app/components/Icon';
 import { getCategories } from '@/lib/queries/categories';
-import { insertTransaction } from '@/lib/queries/transactions';
+import { getTransactionById, updateTransaction } from '@/lib/queries/transactions';
 import { isSalaryCategory, getNextBiMonthlyPayDate } from '@/lib/salary';
 import type { Category, TransactionType } from '@/lib/types';
 
-export default function AddTransaction() {
+export default function EditTransaction({ id }: { id: string }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [transactionType, setTransactionType] = useState<TransactionType>('expense');
   const [amount, setAmount] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -22,14 +23,39 @@ export default function AddTransaction() {
   const [recurring, setRecurring] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const isSalary = isSalaryCategory(selectedCategory);
+  const isDebtPayment = transactionType === 'debt_payment';
 
   useEffect(() => {
-    const catType = transactionType === 'debt_payment' ? 'income' : transactionType;
-    getCategories(catType).then(setCategories).catch(() => setCategories([]));
-  }, [transactionType]);
+    getTransactionById(id)
+      .then((tx) => {
+        if (!tx) {
+          setNotFound(true);
+          return;
+        }
+        const type = tx.type as TransactionType;
+        setTransactionType(type);
+        setAmount(String(Math.abs(Number(tx.amount))));
+        setCategoryId(tx.category_id);
+        setDate(tx.date);
+        setNotes(tx.notes ?? '');
+        setDescription(tx.description ?? '');
+        setRecurring(tx.recurring_schedule === 'bi-monthly');
+        getCategories(type === 'debt_payment' ? 'income' : type).then(setCategories).catch(() => setCategories([]));
+      })
+      .catch(() => setNotFound(true))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  useEffect(() => {
+    if (!loading && categoryId) {
+      const catType = transactionType === 'debt_payment' ? 'income' : transactionType;
+      getCategories(catType).then(setCategories).catch(() => setCategories([]));
+    }
+  }, [transactionType, loading, categoryId]);
 
   useEffect(() => {
     if (isSalary) setTransactionType('income');
@@ -48,11 +74,9 @@ export default function AddTransaction() {
       return;
     }
 
-    const finalAmount = transactionType === 'expense' ? -amt : amt;
-
     try {
-      await insertTransaction({
-        amount: Math.abs(finalAmount),
+      await updateTransaction(id, {
+        amount: Math.abs(amt),
         type: transactionType,
         category_id: categoryId,
         description: description || null,
@@ -60,13 +84,32 @@ export default function AddTransaction() {
         notes: notes || null,
         recurring_schedule: isSalary && recurring ? 'bi-monthly' : null,
       });
-      router.push('/dashboard');
+      router.push('/transactions');
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add transaction');
+      setError(err instanceof Error ? err.message : 'Failed to update transaction');
       setIsSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FB] flex items-center justify-center">
+        <div className="text-[#6B7280]">Loading...</div>
+      </div>
+    );
+  }
+
+  if (notFound) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FB] flex flex-col items-center justify-center gap-4">
+        <p className="text-[#6B7280]">Transaction not found</p>
+        <Link href="/transactions" className="text-[#059669] hover:underline font-medium">
+          Back to Transactions
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F9FB]">
@@ -74,11 +117,11 @@ export default function AddTransaction() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16">
             <Link
-              href="/dashboard"
+              href="/transactions"
               className="flex items-center gap-2 text-[#6B7280] hover:text-[#1F2937] transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium">Back to Dashboard</span>
+              <span className="font-medium">Back to Transactions</span>
             </Link>
           </div>
         </div>
@@ -86,8 +129,8 @@ export default function AddTransaction() {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-[#1F2937] mb-2">Add Transaction</h1>
-          <p className="text-[#6B7280]">Record your income, expenses, or other revenue</p>
+          <h1 className="text-2xl font-semibold text-[#1F2937] mb-2">Edit Transaction</h1>
+          <p className="text-[#6B7280]">Update your transaction details</p>
         </div>
 
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-[#E5E7EB]">
@@ -96,13 +139,13 @@ export default function AddTransaction() {
             <div className="grid grid-cols-3 gap-4">
               <button
                 type="button"
-                disabled={isSalary}
+                disabled={isSalary || isDebtPayment}
                 onClick={() => {
                   setTransactionType('expense');
                   setCategoryId('');
                 }}
                 className={`p-4 rounded-2xl border-2 transition-all ${
-                  isSalary ? 'opacity-50 cursor-not-allowed border-[#E5E7EB]' : ''
+                  isSalary || isDebtPayment ? 'opacity-50 cursor-not-allowed border-[#E5E7EB]' : ''
                 } ${
                   transactionType === 'expense'
                     ? 'border-[#EF4444] bg-[#FEF2F2]'
@@ -125,11 +168,14 @@ export default function AddTransaction() {
 
               <button
                 type="button"
+                disabled={isDebtPayment}
                 onClick={() => {
                   setTransactionType('income');
                   setCategoryId('');
                 }}
                 className={`p-4 rounded-2xl border-2 transition-all ${
+                  isDebtPayment ? 'opacity-50 cursor-not-allowed border-[#E5E7EB]' : ''
+                } ${
                   transactionType === 'income'
                     ? 'border-[#10B981] bg-[#ECFDF5]'
                     : 'border-[#E5E7EB] hover:border-[#D1D5DB]'
@@ -151,13 +197,13 @@ export default function AddTransaction() {
 
               <button
                 type="button"
-                disabled={isSalary}
+                disabled={isSalary || isDebtPayment}
                 onClick={() => {
                   setTransactionType('other_revenue');
                   setCategoryId('');
                 }}
                 className={`p-4 rounded-2xl border-2 transition-all ${
-                  isSalary ? 'opacity-50 cursor-not-allowed border-[#E5E7EB]' : ''
+                  isSalary || isDebtPayment ? 'opacity-50 cursor-not-allowed border-[#E5E7EB]' : ''
                 } ${
                   transactionType === 'other_revenue'
                     ? 'border-[#059669] bg-[#D1FAE5]'
@@ -180,6 +226,9 @@ export default function AddTransaction() {
                 </div>
               </button>
             </div>
+            {isDebtPayment && (
+              <p className="mt-2 text-sm text-[#6B7280]">Debt payment transactions cannot change type or category.</p>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -232,7 +281,8 @@ export default function AddTransaction() {
                   id="category"
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all appearance-none bg-white"
+                  disabled={isDebtPayment}
+                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all appearance-none bg-white disabled:opacity-60 disabled:cursor-not-allowed"
                   required
                 >
                   <option value="">Select a category</option>
@@ -314,7 +364,7 @@ export default function AddTransaction() {
 
             <div className="flex gap-4 pt-4">
               <Link
-                href="/dashboard"
+                href="/transactions"
                 className="flex-1 py-4 border-2 border-[#E5E7EB] text-[#6B7280] rounded-2xl font-medium hover:bg-[#F9FAFB] transition-colors text-center"
               >
                 Cancel
@@ -324,17 +374,10 @@ export default function AddTransaction() {
                 disabled={isSubmitting}
                 className="flex-1 py-4 bg-[#059669] text-white rounded-2xl font-medium hover:bg-[#047857] transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'Adding...' : 'Add Transaction'}
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>
-        </div>
-
-        <div className="mt-6 p-4 bg-[#D1FAE5] rounded-2xl border border-[#6EE7B7]">
-          <p className="text-sm text-[#4338CA]">
-            <strong>Tip:</strong> Adding transactions regularly helps our AI provide more accurate insights about your
-            spending habits.
-          </p>
         </div>
       </div>
     </div>

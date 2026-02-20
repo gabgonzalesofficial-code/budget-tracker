@@ -47,11 +47,8 @@ export default function LoginScreen() {
     <div className="min-h-screen bg-gradient-to-br from-[#F8F9FB] to-[#E8EDF4] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center justify-center w-16 h-16 bg-[#6366F1] rounded-2xl mb-4">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <path d="M16 4L16 28M16 4L8 12M16 4L24 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 20L16 28L24 20" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <Link href="/" className="inline-flex items-center justify-center w-16 h-16 bg-[#059669] rounded-2xl mb-4 overflow-hidden">
+              <Icon name="logowithtext" size={100} />
           </Link>
           <h1 className="text-3xl font-semibold text-[#1F2937] mb-2">
             {isSignUp ? 'Start Your Journey' : 'Welcome Back'}
@@ -59,7 +56,7 @@ export default function LoginScreen() {
           <p className="text-[#6B7280]">
             {isSignUp
               ? 'Take control of your finances with AI-powered insights'
-              : 'Your personal AI financial coach'}
+              : 'Your personal budget tracker with AI insights'}
           </p>
         </div>
 
@@ -80,7 +77,7 @@ export default function LoginScreen() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all"
                   placeholder="John Doe"
                   required={isSignUp}
                 />
@@ -98,7 +95,7 @@ export default function LoginScreen() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
+                  className="w-full pl-12 pr-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all"
                   placeholder="you@example.com"
                   required
                 />
@@ -116,7 +113,7 @@ export default function LoginScreen() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-12 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
+                  className="w-full pl-12 pr-12 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all"
                   placeholder="••••••••"
                   required
                 />
@@ -144,10 +141,10 @@ export default function LoginScreen() {
             {!isSignUp && (
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center">
-                  <input type="checkbox" className="w-4 h-4 text-[#6366F1] border-[#D1D5DB] rounded focus:ring-[#6366F1]" />
+                  <input type="checkbox" className="w-4 h-4 text-[#059669] border-[#D1D5DB] rounded focus:ring-[#059669]" />
                   <span className="ml-2 text-[#6B7280]">Remember me</span>
                 </label>
-                <span className="text-[#6366F1] cursor-not-allowed" title="Coming soon">
+                <span className="text-[#059669] cursor-not-allowed" title="Coming soon">
                   Forgot password?
                 </span>
               </div>
@@ -155,7 +152,7 @@ export default function LoginScreen() {
 
             <button
               type="submit"
-              className="w-full bg-[#6366F1] text-white py-3 rounded-xl font-medium hover:bg-[#4F46E5] transition-colors shadow-sm"
+              className="w-full bg-[#059669] text-white py-3 rounded-xl font-medium hover:bg-[#047857] transition-colors shadow-sm"
             >
               {isSignUp ? 'Create Account' : 'Sign In'}
             </button>
@@ -170,14 +167,14 @@ export default function LoginScreen() {
               {isSignUp ? (
                 <>
                   Already have an account?{' '}
-                  <span className="text-[#6366F1] font-medium hover:text-[#4F46E5] transition-colors">
+                  <span className="text-[#059669] font-medium hover:text-[#047857] transition-colors">
                     Sign in
                   </span>
                 </>
               ) : (
                 <>
                   Don&apos;t have an account?{' '}
-                  <span className="text-[#6366F1] font-medium hover:text-[#4F46E5] transition-colors">
+                  <span className="text-[#059669] font-medium hover:text-[#047857] transition-colors">
                     Sign up
                   </span>
                 </>

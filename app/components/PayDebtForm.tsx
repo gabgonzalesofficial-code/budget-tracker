@@ -6,11 +6,12 @@ import Link from 'next/link';
 import { ArrowLeft, FileText } from 'lucide-react';
 import Icon from '@/app/components/Icon';
 import { listAllDebts, payDebt } from '@/lib/queries/debts';
-import { formatAmount } from '@/lib/currency';
+import { useCurrency } from '@/context/CurrencyContext';
 import type { Debt } from '@/lib/types';
 
 export default function PayDebtForm() {
   const router = useRouter();
+  const { formatAmount } = useCurrency();
   const searchParams = useSearchParams();
   const preselectedId = searchParams.get('debt');
 
@@ -20,6 +21,7 @@ export default function PayDebtForm() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     listAllDebts().then(setDebts).catch(() => setDebts([]));
@@ -36,14 +38,18 @@ export default function PayDebtForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setError(null);
+    setIsSubmitting(true);
     const amt = parseFloat(amount);
     if (isNaN(amt) || amt <= 0) {
       setError('Enter a valid amount');
+      setIsSubmitting(false);
       return;
     }
     if (!debtId) {
       setError('Select a debt');
+      setIsSubmitting(false);
       return;
     }
 
@@ -53,6 +59,7 @@ export default function PayDebtForm() {
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Payment failed');
+      setIsSubmitting(false);
     }
   };
 
@@ -78,7 +85,7 @@ export default function PayDebtForm() {
               ? 'No debts to pay. Add a debt first.'
               : 'All debts paid off! Add a new debt to track.'}
           </p>
-          <Link href="/debts/new" className="mt-4 inline-block text-[#6366F1] font-medium">
+          <Link href="/debts/new" className="mt-4 inline-block text-[#059669] font-medium">
             Add Debt →
           </Link>
         </div>
@@ -122,7 +129,7 @@ export default function PayDebtForm() {
                 id="debt"
                 value={debtId}
                 onChange={(e) => setDebtId(e.target.value)}
-                className="w-full px-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent appearance-none bg-white"
+                className="w-full px-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent appearance-none bg-white"
                 required
               >
                 <option value="">Select a debt</option>
@@ -153,7 +160,7 @@ export default function PayDebtForm() {
                   max={selectedDebt?.remaining_balance ?? undefined}
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent text-2xl font-semibold"
+                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent text-2xl font-semibold"
                   placeholder="0.00"
                   required
                 />
@@ -171,7 +178,7 @@ export default function PayDebtForm() {
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
+                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent"
                   required
                 />
               </div>
@@ -187,7 +194,7 @@ export default function PayDebtForm() {
                   id="notes"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent resize-none"
+                  className="w-full pl-12 pr-4 py-4 border border-[#E5E7EB] rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent resize-none"
                   placeholder="e.g. Extra payment from bonus"
                   rows={2}
                 />
@@ -203,9 +210,10 @@ export default function PayDebtForm() {
               </Link>
               <button
                 type="submit"
-                className="flex-1 py-4 bg-[#10B981] text-white rounded-2xl font-medium hover:bg-[#059669] transition-colors"
+                disabled={isSubmitting}
+                className="flex-1 py-4 bg-[#10B981] text-white rounded-2xl font-medium hover:bg-[#059669] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Record Payment
+                {isSubmitting ? 'Processing...' : 'Record Payment'}
               </button>
             </div>
           </form>

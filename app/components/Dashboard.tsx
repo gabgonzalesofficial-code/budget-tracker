@@ -15,7 +15,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { listTransactions, getMonthlyTrends } from '@/lib/queries/transactions';
 import { getCategorySpending } from '@/lib/queries/budgets';
-import { formatAmount } from '@/lib/currency';
+import { useCurrency } from '@/context/CurrencyContext';
 import DebtOverview from '@/app/components/DebtOverview';
 import UserMenu from '@/app/components/UserMenu';
 import { Bell, Settings } from 'lucide-react';
@@ -23,6 +23,7 @@ import Icon, { CATEGORY_ICON_MAP, type IconName } from '@/app/components/Icon';
 import type { Transaction } from '@/lib/types';
 
 export default function Dashboard() {
+  const { formatAmount } = useCurrency();
   const [spendingData, setSpendingData] = useState<{ month: string; spending: number; income: number }[]>([]);
   const [categorySpending, setCategorySpending] = useState<
     { category: string; amount: number; budget: number; iconName: IconName; color: string }[]
@@ -76,7 +77,7 @@ export default function Dashboard() {
             amount: s.amount,
             budget: s.budget,
             iconName: (s.icon_name && CATEGORY_ICON_MAP[s.icon_name]) || 'expense',
-            color: s.color ?? '#6366F1',
+            color: s.color ?? '#059669',
           }))
         );
       } catch {
@@ -103,17 +104,17 @@ export default function Dashboard() {
           <div className="flex items-center justify-between h-16">
             <Link href="/dashboard" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-                <Icon name="dashboard" size={24} alt="Budget Tracker" ariaHidden={false} />
+                <Icon name="mainlogo" size={100} alt="Budge-jet Tracker" ariaHidden={false} />
               </div>
-              <h1 className="text-xl font-semibold text-[#1F2937]">Budget Tracker</h1>
+              <h1 className="text-xl font-semibold text-[#1F2937]">Budge-jet</h1>
             </Link>
             <div className="flex items-center gap-4">
               <button className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors" aria-label="Notifications">
                 <Bell className="w-5 h-5 text-[#6B7280]" />
               </button>
-              <button className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors" aria-label="Settings">
+              <Link href="/settings" className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors" aria-label="Settings">
                 <Settings className="w-5 h-5 text-[#6B7280]" />
-              </button>
+              </Link>
               <UserMenu initials={userName.slice(0, 2).toUpperCase()} />
             </div>
           </div>
@@ -130,7 +131,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] rounded-3xl p-6 mb-8 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-[#059669] to-[#047857] rounded-3xl p-6 mb-8 text-white shadow-lg">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
               <Icon name="chart" size={24} alt="AI Insight" ariaHidden={false} />
@@ -217,7 +218,7 @@ export default function Dashboard() {
                   />
                   <Legend />
                   <Line type="monotone" dataKey="income" stroke="#10B981" strokeWidth={2} name="Income" />
-                  <Line type="monotone" dataKey="spending" stroke="#6366F1" strokeWidth={2} name="Spending" />
+                  <Line type="monotone" dataKey="spending" stroke="#059669" strokeWidth={2} name="Spending" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -227,7 +228,7 @@ export default function Dashboard() {
                 <h3 className="text-lg font-semibold text-[#1F2937]">Budget Usage</h3>
                 <Link
                   href="/budget"
-                  className="text-sm text-[#6366F1] font-medium hover:text-[#4F46E5] transition-colors"
+                  className="text-sm text-[#059669] font-medium hover:text-[#047857] transition-colors"
                 >
                   Manage Budgets
                 </Link>
@@ -266,7 +267,7 @@ export default function Dashboard() {
                         </div>
                         <div className="w-full bg-[#F3F4F6] rounded-full h-2 overflow-hidden">
                           <div
-                            className={`h-full rounded-full transition-all ${isOverBudget ? 'bg-[#EF4444]' : isNearLimit ? 'bg-[#F59E0B]' : 'bg-[#6366F1]'}`}
+                            className={`h-full rounded-full transition-all ${isOverBudget ? 'bg-[#EF4444]' : isNearLimit ? 'bg-[#F59E0B]' : 'bg-[#059669]'}`}
                             style={{ width: `${Math.min(percentage, 100)}%` }}
                           />
                         </div>
@@ -284,16 +285,16 @@ export default function Dashboard() {
               <div className="space-y-3">
                 <Link
                   href="/transactions/new"
-                  className="w-full flex items-center gap-3 p-4 bg-[#6366F1] hover:bg-[#4F46E5] text-white rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 p-4 bg-[#059669] hover:bg-[#047857] text-white rounded-xl transition-colors"
                 >
-                  <Icon name="add" size={20} invert />
+                  <Icon name="add" size={20} />
                   <span className="font-medium">Add Transaction</span>
                 </Link>
                 <Link
                   href="/ai-assistant"
                   className="w-full flex items-center gap-3 p-4 bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#1F2937] rounded-xl transition-colors"
                 >
-                  <Icon name="chart" size={20} />
+                  <Icon name="robotassistant" size={20} />
                   <span className="font-medium">AI Assistant</span>
                 </Link>
                 <Link
@@ -311,7 +312,7 @@ export default function Dashboard() {
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E5E7EB]">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-[#1F2937]">Recent Activity</h3>
-                <Link href="/transactions" className="text-sm text-[#6366F1] font-medium hover:text-[#4F46E5] transition-colors">
+                <Link href="/transactions" className="text-sm text-[#059669] font-medium hover:text-[#047857] transition-colors">
                   View All
                 </Link>
               </div>
