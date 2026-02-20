@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Budget Tracker
 
-## Getting Started
+AI-powered personal budget tracker built with Next.js (App Router, TypeScript) and Supabase.
 
-First, run the development server:
+## Setup
+
+1. **Install dependencies**
+
+```bash
+npm install
+```
+
+2. **Configure Supabase**
+
+- Create a [Supabase](https://supabase.com) project
+- Copy `.env.example` to `.env.local`
+- Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from your project settings
+- Run migrations in order in the Supabase SQL editor:
+  - `supabase/migrations/001_initial_schema.sql`
+  - `supabase/migrations/002_salary_support.sql`
+  - `supabase/migrations/003_debts.sql`
+
+3. **Run the app**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). You’ll be redirected to `/dashboard`; unauthenticated users are sent to `/auth/login`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | Description |
+|-------|-------------|
+| `/` | Redirects to dashboard |
+| `/auth/login` | Sign in / sign up |
+| `/dashboard` | Overview, AI insights, budget usage, recent activity |
+| `/transactions` | Transaction list |
+| `/transactions/new` | Add a transaction |
+| `/budget` | Manage monthly budgets by category |
+| `/ai-assistant` | AI chat for financial questions |
+| `/debts` | Debt list and overview |
+| `/debts/new` | Add a debt |
+| `/debts/pay` | Record a debt payment |
 
-## Learn More
+## Data Model
 
-To learn more about Next.js, take a look at the following resources:
+- **categories** – Seeded expense/income/other_revenue categories
+- **transactions** – User transactions (expense, income, other_revenue, debt_payment)
+- **budgets** – Monthly budget limits per category
+- **debts** – Loans, credit cards, personal debt with remaining balance
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Currency is Philippine Peso (₱).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Data is stored with clear structure for later AI analysis (trends, overages, income vs expenses).
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- Supabase (Auth + PostgreSQL)
+- Recharts
+- Lucide React
