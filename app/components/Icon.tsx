@@ -64,7 +64,7 @@ const ICON_FILE_MAP: Record<IconName, string> = {
   mainlogo: '/icons/main-logo.png',       
   logowithtext: '/icons/main-logo-with-text.gif',
   logotext: '/icons/logotext.png',
-  robotassistant: '/icons/robotassistant.png',
+  robotassistant: '/icons/robotassistant.PNG',
   lightbulb: '/icons/lightbulb.png',
   graph: '/icons/graph.png',
   awardcup: '/icons/awardcup.png',
