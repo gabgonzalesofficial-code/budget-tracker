@@ -97,7 +97,7 @@ export default function AIAssistant() {
             title: 'Add More Data',
             description: 'Add transactions and set budgets to get personalized insights from your AI coach.',
             type: 'suggestion',
-            iconName: 'chart',
+            iconName: 'rocket',
           });
         }
 
@@ -207,7 +207,7 @@ export default function AIAssistant() {
               <span className="font-medium">Back to Dashboard</span>
             </Link>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#059669] to-[#047857] rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#8ba888] to-[#047857] rounded-xl flex items-center justify-center">
                 <Icon name="robotassistant" size={24} />
               </div>
               <div>
@@ -279,7 +279,7 @@ export default function AIAssistant() {
             <div className="bg-white rounded-3xl shadow-sm border border-[#E5E7EB] flex flex-col h-[calc(100vh-180px)] min-h-[400px]">
               <div className="px-6 py-4 border-b border-[#E5E7EB]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#059669] to-[#047857] rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#8ba888] to-[#047857] rounded-full flex items-center justify-center">
                     <Icon name="robotassistant" size={20} />
                   </div>
                   <div>
@@ -300,13 +300,13 @@ export default function AIAssistant() {
                   >
                     <div
                       className={`max-w-[80%] ${
-                        message.type === 'user' ? 'bg-[#059669] text-white' : 'bg-[#F3F4F6] text-[#1F2937]'
+                        message.type === 'user' ? 'bg-[#8ba888] text-white' : 'bg-[#F3F4F6] text-[#1F2937]'
                       } rounded-2xl px-5 py-4`}
                     >
                       {message.type === 'ai' && (
                         <div className="flex items-center gap-2 mb-2">
-                          <Icon name="chart" size={16} />
-                          <span className="text-xs font-medium text-[#059669]">AI Coach</span>
+                          <Icon name="darttarget" size={16} />
+                          <span className="text-xs font-medium text-[#8ba888]">AI Coach</span>
                         </div>
                       )}
                       <div className="text-sm leading-relaxed whitespace-pre-line [&>strong]:font-semibold">
@@ -325,7 +325,7 @@ export default function AIAssistant() {
                 {isLoading && (
                   <div className="flex justify-start">
                     <div className="bg-[#F3F4F6] rounded-2xl px-5 py-4 flex items-center gap-2">
-                      <Loader2 className="w-5 h-5 animate-spin text-[#059669]" />
+                      <Loader2 className="w-5 h-5 animate-spin text-[#8ba888]" />
                       <span className="text-sm text-[#6B7280]">Thinking...</span>
                     </div>
                   </div>
@@ -341,12 +341,12 @@ export default function AIAssistant() {
                     onChange={(e) => setInputMessage(e.target.value)}
                     placeholder="Ask me anything about your finances..."
                     disabled={isLoading}
-                    className="flex-1 px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition-all disabled:opacity-60"
+                    className="flex-1 px-4 py-3 border border-[#E5E7EB] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8ba888] focus:border-transparent transition-all disabled:opacity-60"
                   />
                   <button
                     type="submit"
                     disabled={!inputMessage.trim() || isLoading}
-                    className="px-6 py-3 bg-[#059669] text-white rounded-xl font-medium hover:bg-[#047857] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-6 py-3 bg-[#8ba888] text-white rounded-xl font-medium hover:bg-[#047857] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {isLoading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />

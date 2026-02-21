@@ -68,16 +68,16 @@ export default function DebtsList() {
             <div className="flex items-center gap-2">
               <Link
                 href="/debts/pay"
-                className="flex items-center gap-2 px-4 py-2 bg-[#10B981] text-white rounded-xl font-medium hover:bg-[#059669] transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-[#047857] bg-[#D1FAE5] rounded-xl font-medium hover:bg-green-200 transition-colors"
               >
-                <Icon name="wallet" size={16} />
+           
                 Pay Debt
               </Link>
               <Link
                 href="/debts/new"
-                className="flex items-center gap-2 px-4 py-2 bg-[#059669] text-white rounded-xl font-medium hover:bg-[#047857] transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-[red] bg-[#FEE2E2] rounded-xl font-medium hover:bg-red-200 transition-colors"
               >
-                <Icon name="add" size={16} />
+        
                 Add Debt
               </Link>
             </div>

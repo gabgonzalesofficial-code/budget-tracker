@@ -15,6 +15,7 @@ npm install
 - Create a [Supabase](https://supabase.com) project
 - Copy `.env.example` to `.env.local`
 - Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from your project settings
+- For forgot-password: In Supabase Dashboard → Authentication → URL Configuration, add your redirect URL (e.g. `http://localhost:3000/auth/reset-password` for local dev, or your production URL + `/auth/reset-password`)
 
 3. **Configure Groq AI (for AI Assistant)**
 
@@ -40,6 +41,7 @@ Open [http://localhost:3000](http://localhost:3000). You’ll be redirected to `
 |-------|-------------|
 | `/` | Redirects to dashboard |
 | `/auth/login` | Sign in / sign up |
+| `/auth/reset-password` | Set new password (from email link) |
 | `/dashboard` | Overview, AI insights, budget usage, recent activity |
 | `/transactions` | Transaction list |
 | `/transactions/new` | Add a transaction |

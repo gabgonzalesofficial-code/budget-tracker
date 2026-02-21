@@ -103,10 +103,10 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/dashboard" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-                <Icon name="mainlogo" size={100} alt="Budge-jet Tracker" ariaHidden={false} />
+              <div className="rounded-xl flex items-center justify-center">
+                <Icon name="logotext" size={150} alt="Budge-jet Tracker Logo" ariaHidden={false} />
               </div>
-              <h1 className="text-xl font-semibold text-[#1F2937]">Budge-jet</h1>
+              
             </Link>
             <div className="flex items-center gap-4">
               <button className="p-2 hover:bg-[#F3F4F6] rounded-lg transition-colors" aria-label="Notifications">
@@ -131,10 +131,10 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="bg-gradient-to-br from-[#059669] to-[#047857] rounded-3xl p-6 mb-8 text-white shadow-lg">
+        <div className="bg-gradient-to-br from-[#8ba888] to-[#047857] rounded-3xl p-6 mb-8 text-white shadow-lg">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-              <Icon name="chart" size={24} alt="AI Insight" ariaHidden={false} />
+              <Icon name="lightbulb" size={24} alt="AI Insight" ariaHidden={false} />
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold mb-2">AI Insight</h3>
@@ -218,7 +218,7 @@ export default function Dashboard() {
                   />
                   <Legend />
                   <Line type="monotone" dataKey="income" stroke="#10B981" strokeWidth={2} name="Income" />
-                  <Line type="monotone" dataKey="spending" stroke="#059669" strokeWidth={2} name="Spending" />
+                  <Line type="monotone" dataKey="spending" stroke="#AA4A44" strokeWidth={2} name="Spending" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -285,9 +285,9 @@ export default function Dashboard() {
               <div className="space-y-3">
                 <Link
                   href="/transactions/new"
-                  className="w-full flex items-center gap-3 p-4 bg-[#059669] hover:bg-[#047857] text-white rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 p-4 bg-[#8ba888] hover:bg-[#047857] text-white rounded-xl transition-colors"
                 >
-                  <Icon name="add" size={20} />
+                  <Icon name="cart" size={20} />
                   <span className="font-medium">Add Transaction</span>
                 </Link>
                 <Link
@@ -334,9 +334,8 @@ export default function Dashboard() {
                       >
                         <div className="flex items-center gap-3">
                           <div
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                              isIncome ? 'bg-[#D1FAE5]' : isDebt ? 'bg-[#FEF3C7]' : 'bg-[#F3F4F6]'
-                            }`}
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center ${isIncome ? 'bg-[#D1FAE5]' : isDebt ? 'bg-[#FEF3C7]' : 'bg-[#F3F4F6]'
+                              }`}
                           >
                             {isIncome ? (
                               <Icon name="income" size={20} />
@@ -352,9 +351,8 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <div
-                          className={`text-sm font-semibold ${
-                            isIncome ? 'text-[#10B981]' : isDebt ? 'text-[#D97706]' : 'text-[#1F2937]'
-                          }`}
+                          className={`text-sm font-semibold ${isIncome ? 'text-[#10B981]' : isDebt ? 'text-[#D97706]' : 'text-[#1F2937]'
+                            }`}
                         >
                           {isIncome ? '+' : isDebt ? '-' : '-'}{formatAmount(Math.abs(Number(t.amount)))}
                         </div>

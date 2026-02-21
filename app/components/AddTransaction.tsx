@@ -170,7 +170,7 @@ export default function AddTransaction() {
                       transactionType === 'other_revenue' ? 'bg-[#059669]' : 'bg-[#F3F4F6]'
                     }`}
                   >
-                    <Icon name="add" size={24} invert={transactionType === 'other_revenue'} />
+                    <Icon name="coins" size={24} />
                   </div>
                   <span
                     className={`font-medium text-center ${transactionType === 'other_revenue' ? 'text-[#059669]' : 'text-[#6B7280]'}`}
@@ -227,7 +227,7 @@ export default function AddTransaction() {
                 Category
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10"><Icon name="budget" size={20} /></span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10"><Icon name="shield" size={20} /></span>
                 <select
                   id="category"
                   value={categoryId}

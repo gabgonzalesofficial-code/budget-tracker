@@ -24,7 +24,7 @@ export default function DebtOverview() {
           <h3 className="text-lg font-semibold text-[#1F2937]">Debt Overview</h3>
           <Link
             href="/debts/new"
-            className="text-sm text-[#059669] font-medium hover:text-[#047857] transition-colors"
+            className="text-sm text-[red] bg-[#FEE2E2] rounded-xl px-4 py-2 font-medium hover:text-[#047857] transition-colors"
           >
             Add Debt
           </Link>
@@ -41,16 +41,14 @@ export default function DebtOverview() {
         <div className="flex items-center gap-3">
             <Link
               href="/debts/pay"
-              className="text-sm text-[#10B981] font-medium hover:text-[#059669] transition-colors flex items-center gap-1"
+              className="text-sm text-[#047857] bg-[#D1FAE5] rounded-xl px-4 py-2 font-medium hover:text-[#059669] transition-colors flex items-center gap-1"
             >
-              <Icon name="wallet" size={16} />
             Pay Debt
           </Link>
             <Link
               href="/debts/new"
-              className="text-sm text-[#059669] font-medium hover:text-[#047857] transition-colors flex items-center gap-1"
+              className="text-sm text-[red] bg-[#FEE2E2] rounded-xl px-4 py-2 font-medium hover:text-[#047857] transition-colors flex items-center gap-1"
             >
-              <Icon name="add" size={16} />
             Add Debt
           </Link>
         </div>
